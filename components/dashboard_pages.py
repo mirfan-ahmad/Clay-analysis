@@ -47,26 +47,26 @@ class DashboardPages:
             )
             st.plotly_chart(fig_leadership, use_container_width=True, key="overview_leadership")
         
-        # Market penetration analysis
-        st.markdown('<h3 class="section-header">🎯 Market Penetration Analysis</h3>', unsafe_allow_html=True)
-        st.markdown("*This chart shows which companies have both strong leadership presence and active hiring, indicating organizations that are growing and have multiple decision makers we can engage with.*")
+        # # Market penetration analysis
+        # st.markdown('<h3 class="section-header">🎯 Market Penetration Analysis</h3>', unsafe_allow_html=True)
+        # st.markdown("*This chart shows which companies have both strong leadership presence and active hiring, indicating organizations that are growing and have multiple decision makers we can engage with.*")
         
-        # Companies with both decision makers and jobs
-        companies_with_dm = set(decision_makers_df['Company'].unique())
-        companies_with_jobs = set(jobs_df['Company Name'].unique())
-        companies_with_both = companies_with_dm.intersection(companies_with_jobs)
+        # # Companies with both decision makers and jobs
+        # companies_with_dm = set(decision_makers_df['Company'].unique())
+        # companies_with_jobs = set(jobs_df['Company Name'].unique())
+        # companies_with_both = companies_with_dm.intersection(companies_with_jobs)
         
-        penetration_data = pd.Series({
-            'Companies with Decision Makers Only': len(companies_with_dm - companies_with_jobs),
-            'Companies with Jobs Only': len(companies_with_jobs - companies_with_dm),
-            'Companies with Both': len(companies_with_both),
-            'Companies with Neither': len(set(companies_df['Name'].unique()) - companies_with_dm - companies_with_jobs)
-        })
+        # penetration_data = pd.Series({
+        #     'Companies with Decision Makers Only': len(companies_with_dm - companies_with_jobs),
+        #     'Companies with Jobs Only': len(companies_with_jobs - companies_with_dm),
+        #     'Companies with Both': len(companies_with_both),
+        #     'Companies with Neither': len(set(companies_df['Name'].unique()) - companies_with_dm - companies_with_jobs)
+        # })
         
-        fig_penetration = self.chart_creator.create_pie_chart(
-            penetration_data, "Market Penetration Analysis"
-        )
-        st.plotly_chart(fig_penetration, use_container_width=True, key="overview_penetration")
+        # fig_penetration = self.chart_creator.create_pie_chart(
+        #     penetration_data, "Market Penetration Analysis"
+        # )
+        # st.plotly_chart(fig_penetration, use_container_width=True, key="overview_penetration")
         
         # Geographic market presence
         st.markdown('<h3 class="section-header">🌍 Geographic Market Presence</h3>', unsafe_allow_html=True)
@@ -139,23 +139,23 @@ class DashboardPages:
         # )
         # st.plotly_chart(fig_digital, use_container_width=True, key="companies_digital")
         
-        # Geographic expansion opportunities
-        st.markdown('<h3 class="section-header">🌍 Geographic Expansion Opportunities</h3>', unsafe_allow_html=True)
-        st.markdown("*This chart shows where companies are located around the world, helping us identify which markets are most active and where we should focus our business development efforts.*")
+        # # Geographic expansion opportunities
+        # st.markdown('<h3 class="section-header">🌍 Geographic Expansion Opportunities</h3>', unsafe_allow_html=True)
+        # st.markdown("*This chart shows where companies are located around the world, helping us identify which markets are most active and where we should focus our business development efforts.*")
         
-        country_counts = companies_df['Country'].value_counts().head(10)
-        fig_country = self.chart_creator.create_vertical_bar(
-            country_counts, "Companies by Geographic Market"
-        )
-        st.plotly_chart(fig_country, use_container_width=True, key="companies_country")
+        # country_counts = companies_df['Country'].value_counts().head(10)
+        # fig_country = self.chart_creator.create_vertical_bar(
+        #     country_counts, "Companies by Geographic Market"
+        # )
+        # st.plotly_chart(fig_country, use_container_width=True, key="companies_country")
         
-        # Company type analysis
-        st.markdown('<h3 class="section-header">🏢 Company Type Analysis</h3>', unsafe_allow_html=True)
-        st.markdown("*This chart shows the mix of public and private companies in our market, helping us understand the business model landscape and identify the best targets for our services.*")
+        # # Company type analysis
+        # st.markdown('<h3 class="section-header">🏢 Company Type Analysis</h3>', unsafe_allow_html=True)
+        # st.markdown("*This chart shows the mix of public and private companies in our market, helping us understand the business model landscape and identify the best targets for our services.*")
         
-        type_counts = companies_df['Type'].value_counts()
-        fig_type = self.chart_creator.create_pie_chart(type_counts, "Company Type Distribution")
-        st.plotly_chart(fig_type, use_container_width=True, key="companies_type")
+        # type_counts = companies_df['Type'].value_counts()
+        # fig_type = self.chart_creator.create_pie_chart(type_counts, "Company Type Distribution")
+        # st.plotly_chart(fig_type, use_container_width=True, key="companies_type")
         
         # Data table with integrated export
         self._render_companies_data_table(companies_df)
@@ -169,40 +169,40 @@ class DashboardPages:
         ])
         
         # Strategic analysis in 2x2 grid
-        col1, col2 = st.columns(2)
+        # col1, col2 = st.columns(2)
         
-        with col1:
-            # Leadership hierarchy
-            st.markdown("**Leadership Hierarchy Distribution**")
-            st.markdown("*This chart shows the breakdown of decision makers by their level of authority, helping us understand who has the power to make important business decisions and approve deals.*")
-            
-            seniority_counts = decision_makers_df['Seniority'].value_counts()
-            fig_seniority = self.chart_creator.create_pie_chart(
-                seniority_counts, "Leadership Hierarchy Distribution"
-            )
-            st.plotly_chart(fig_seniority, use_container_width=True, key="dm_seniority")
+        # with col1:
+        # Leadership hierarchy
+        st.markdown("**Leadership Hierarchy Distribution**")
+        st.markdown("*This chart shows the breakdown of decision makers by their level of authority, helping us understand who has the power to make important business decisions and approve deals.*")
         
-        with col2:
-            # Key decision maker roles
-            st.markdown("**Key Decision Maker Roles**")
-            st.markdown("*This chart identifies the most common job titles among decision makers, showing us which roles are most important for making business decisions and who we should target in our outreach.*")
-            
-            title_counts = decision_makers_df['Job Title'].value_counts().head(8)
-            fig_titles = self.chart_creator.create_horizontal_bar(
-                title_counts, "Key Decision Maker Roles", "Number of People", "Job Title"
-            )
-            st.plotly_chart(fig_titles, use_container_width=True, key="dm_titles")
-        
-        # Decision maker influence mapping
-        st.markdown('<h3 class="section-header">🎯 Decision Maker Influence Mapping</h3>', unsafe_allow_html=True)
-        st.markdown("*This chart shows which companies have the highest concentration of decision makers, helping us identify organizations where we have multiple potential entry points and stronger relationship opportunities.*")
-        
-        # Calculate decision maker density per company
-        dm_density = decision_makers_df['Company'].value_counts().head(10)
-        fig_influence = self.chart_creator.create_horizontal_bar(
-            dm_density, "Decision Maker Influence by Company", "Number of Decision Makers", "Company"
+        seniority_counts = decision_makers_df['Seniority'].value_counts()
+        fig_seniority = self.chart_creator.create_pie_chart(
+            seniority_counts, "Leadership Hierarchy Distribution"
         )
-        st.plotly_chart(fig_influence, use_container_width=True, key="dm_influence")
+        st.plotly_chart(fig_seniority, use_container_width=True, key="dm_seniority")
+        
+        # with col2:
+            # # Key decision maker roles
+            # st.markdown("**Key Decision Maker Roles**")
+            # st.markdown("*This chart identifies the most common job titles among decision makers, showing us which roles are most important for making business decisions and who we should target in our outreach.*")
+            
+            # title_counts = decision_makers_df['Job Title'].value_counts().head(8)
+            # fig_titles = self.chart_creator.create_horizontal_bar(
+            #     title_counts, "Key Decision Maker Roles", "Number of People", "Job Title"
+            # )
+            # st.plotly_chart(fig_titles, use_container_width=True, key="dm_titles")
+        
+        # # Decision maker influence mapping
+        # st.markdown('<h3 class="section-header">🎯 Decision Maker Influence Mapping</h3>', unsafe_allow_html=True)
+        # st.markdown("*This chart shows which companies have the highest concentration of decision makers, helping us identify organizations where we have multiple potential entry points and stronger relationship opportunities.*")
+        
+        # # Calculate decision maker density per company
+        # dm_density = decision_makers_df['Company'].value_counts().head(10)
+        # fig_influence = self.chart_creator.create_horizontal_bar(
+        #     dm_density, "Decision Maker Influence by Company", "Number of Decision Makers", "Company"
+        # )
+        # st.plotly_chart(fig_influence, use_container_width=True, key="dm_influence")
         
         # Geographic leadership distribution
         st.markdown('<h3 class="section-header">🌍 Geographic Leadership Distribution</h3>', unsafe_allow_html=True)
@@ -214,15 +214,28 @@ class DashboardPages:
         )
         st.plotly_chart(fig_state, use_container_width=True, key="dm_state")
         
-        # Company representation analysis
-        st.markdown('<h3 class="section-header">🏢 Company Representation Analysis</h3>', unsafe_allow_html=True)
-        st.markdown("*This chart shows which companies have the most decision makers, helping us identify organizations with strong leadership teams and understand which companies might be easier to engage with.*")
+        # Comprehensive decision maker distribution across all companies
+        st.markdown('<h3 class="section-header">🏢 Decision Maker Distribution Across All Companies</h3>', unsafe_allow_html=True)
+        st.markdown("*This comprehensive visualization shows decision makers across all companies in our database, helping us understand the complete market landscape and identify companies with strong leadership presence regardless of size.*")
         
-        company_counts = decision_makers_df['Company'].value_counts().head(8)
-        fig_company = self.chart_creator.create_horizontal_bar(
-            company_counts, "Decision Makers by Company", "Number of Decision Makers", "Company"
+        # Group by company and count decision makers
+        company_dm_counts = decision_makers_df['Company'].value_counts()
+        
+        # Create treemap chart for all companies
+        fig_treemap = self.chart_creator.create_treemap_chart(
+            company_dm_counts, "Decision Makers Across All Companies"
         )
-        st.plotly_chart(fig_company, use_container_width=True, key="dm_company")
+        st.plotly_chart(fig_treemap, use_container_width=True, key="dm_treemap_all")
+        
+        # # Company representation analysis (top companies)
+        # st.markdown('<h3 class="section-header">🏢 Top Companies by Decision Maker Count</h3>', unsafe_allow_html=True)
+        # st.markdown("*This chart highlights the companies with the highest concentration of decision makers, helping us identify organizations where we have multiple potential entry points and stronger relationship opportunities.*")
+        
+        # company_counts = decision_makers_df['Company'].value_counts().head(15)
+        # fig_company = self.chart_creator.create_horizontal_bar(
+        #     company_counts, "Top Companies by Decision Maker Count", "Number of Decision Makers", "Company"
+        # )
+        # st.plotly_chart(fig_company, use_container_width=True, key="dm_company")
         
         # Data table with integrated export
         self._render_decision_makers_data_table(decision_makers_df)
@@ -236,52 +249,52 @@ class DashboardPages:
         ])
         
         # Market intelligence in 2x2 grid
-        col1, col2 = st.columns(2)
+        # col1, col2 = st.columns(2)
         
-        with col1:
-            # Skill demand analysis
-            st.markdown("**Skill Demand Analysis**")
-            st.markdown("*This chart shows which job titles are most in demand, helping us understand what skills companies are looking for and where the biggest hiring needs exist in the market.*")
+        # with col1:
+            # # Skill demand analysis
+            # st.markdown("**Skill Demand Analysis**")
+            # st.markdown("*This chart shows which job titles are most in demand, helping us understand what skills companies are looking for and where the biggest hiring needs exist in the market.*")
             
-            job_title_counts = jobs_df['Job Title'].value_counts().head(8)
-            fig_skills = self.chart_creator.create_horizontal_bar(
-                job_title_counts, "Skill Demand Analysis", "Number of Job Postings", "Job Title"
-            )
-            st.plotly_chart(fig_skills, use_container_width=True, key="jobs_skills")
+            # job_title_counts = jobs_df['Job Title'].value_counts().head(8)
+            # fig_skills = self.chart_creator.create_horizontal_bar(
+            #     job_title_counts, "Skill Demand Analysis", "Number of Job Postings", "Job Title"
+            # )
+            # st.plotly_chart(fig_skills, use_container_width=True, key="jobs_skills")
         
-        with col2:
+        # with col2:
             # Company hiring activity
-            st.markdown("**Company Hiring Activity**")
-            st.markdown("*This chart shows which companies are hiring the most, helping us identify organizations that are growing and might be more open to new business opportunities.*")
-            
-            company_job_counts = jobs_df['Company Name'].value_counts().head(8)
-            fig_hiring = self.chart_creator.create_vertical_bar(
-                company_job_counts, "Company Hiring Activity"
-            )
-            st.plotly_chart(fig_hiring, use_container_width=True, key="jobs_hiring")
+        st.markdown("**Company Hiring Activity**")
+        st.markdown("*This chart shows which companies are hiring the most, helping us identify organizations that are growing and might be more open to new business opportunities.*")
         
-        # Business opportunity scoring
-        st.markdown('<h3 class="section-header">🎯 Business Opportunity Scoring</h3>', unsafe_allow_html=True)
-        st.markdown("*This chart identifies companies that are actively hiring and likely growing, helping us prioritize which organizations to approach first based on their current business activity and expansion needs.*")
-        
-        # Calculate opportunity score (companies with multiple job postings)
-        opportunity_scores = jobs_df['Company Name'].value_counts()
-        high_opportunity = opportunity_scores[opportunity_scores > 1].head(8)
-        
-        fig_opportunity = self.chart_creator.create_horizontal_bar(
-            high_opportunity, "High-Growth Companies (Multiple Job Postings)", "Number of Job Postings", "Company"
+        company_job_counts = jobs_df['Company Name'].value_counts().head(8)
+        fig_hiring = self.chart_creator.create_vertical_bar(
+            company_job_counts, "Company Hiring Activity"
         )
-        st.plotly_chart(fig_opportunity, use_container_width=True, key="jobs_opportunity")
+        st.plotly_chart(fig_hiring, use_container_width=True, key="jobs_hiring")
+        
+        # # Business opportunity scoring
+        # st.markdown('<h3 class="section-header">🎯 Business Opportunity Scoring</h3>', unsafe_allow_html=True)
+        # st.markdown("*This chart identifies companies that are actively hiring and likely growing, helping us prioritize which organizations to approach first based on their current business activity and expansion needs.*")
+        
+        # # Calculate opportunity score (companies with multiple job postings)
+        # opportunity_scores = jobs_df['Company Name'].value_counts()
+        # high_opportunity = opportunity_scores[opportunity_scores > 1].head(8)
+        
+        # fig_opportunity = self.chart_creator.create_horizontal_bar(
+        #     high_opportunity, "High-Growth Companies (Multiple Job Postings)", "Number of Job Postings", "Company"
+        # )
+        # st.plotly_chart(fig_opportunity, use_container_width=True, key="jobs_opportunity")
         
         # Geographic job market
-        st.markdown('<h3 class="section-header">🌍 Geographic Job Market</h3>', unsafe_allow_html=True)
-        st.markdown("*This chart shows where job opportunities are located, helping us understand which markets are most active and where companies are expanding their operations.*")
+        # st.markdown('<h3 class="section-header">🌍 Geographic Job Market</h3>', unsafe_allow_html=True)
+        # st.markdown("*This chart shows where job opportunities are located, helping us understand which markets are most active and where companies are expanding their operations.*")
         
-        location_counts = jobs_df['Location'].value_counts().head(10)
-        fig_location = self.chart_creator.create_vertical_bar(
-            location_counts, "Job Opportunities by Location"
-        )
-        st.plotly_chart(fig_location, use_container_width=True, key="jobs_location")
+        # location_counts = jobs_df['Location'].value_counts().head(10)
+        # fig_location = self.chart_creator.create_vertical_bar(
+        #     location_counts, "Job Opportunities by Location"
+        # )
+        # st.plotly_chart(fig_location, use_container_width=True, key="jobs_location")
         
         # Market activity timeline
         if jobs_df['Post On'].notna().any():

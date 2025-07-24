@@ -251,6 +251,42 @@ class ClayDashboard:
                 line-height: 1.4;
             }
             
+            /* Refresh button styling */
+            .stButton > button[data-testid="baseButton-secondary"] {
+                background: var(--accent-color) !important;
+                color: white !important;
+                border: none !important;
+                border-radius: 6px !important;
+                padding: 0.5rem 1.5rem !important;
+                font-weight: 500 !important;
+                transition: all 0.2s ease !important;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+            }
+            
+            .stButton > button[data-testid="baseButton-secondary"]:hover {
+                background: var(--secondary-color) !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
+            }
+            
+            /* Alternative styling for refresh button */
+            .stButton > button:has-text("🔄 Refresh Data") {
+                background: var(--accent-color) !important;
+                color: white !important;
+                border: none !important;
+                border-radius: 6px !important;
+                padding: 0.5rem 1.5rem !important;
+                font-weight: 500 !important;
+                transition: all 0.2s ease !important;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+            }
+            
+            .stButton > button:has-text("🔄 Refresh Data"):hover {
+                background: var(--secondary-color) !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.15) !important;
+            }
+            
         </style>
         """, unsafe_allow_html=True)
     
@@ -286,6 +322,39 @@ class ClayDashboard:
             
             return companies_clean, decision_makers_clean, jobs_clean
     
+    def render_navbar_with_refresh(self):
+        """Render navbar with tabs and refresh icon on the right edge"""
+        # Create a container for the navbar
+        navbar_container = st.container()
+        
+        with navbar_container:
+            # Create columns for navbar layout
+            col1, col2, col3 = st.columns([8, 1, 1])
+            
+            with col1:
+                # This space will be occupied by the tabs
+                pass
+            
+            with col2:
+                # Add some spacing
+                st.write("")
+            
+            with col3:
+                # Refresh icon button positioned at the far right
+                if st.button("🔄", key="navbar_refresh", help="Refresh data"):
+                    # Clear the cache to force data reload
+                    st.cache_data.clear()
+                    st.rerun()
+    
+    def render_refresh_button(self):
+        """Render refresh button for data reload (legacy method)"""
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button("🔄 Refresh Data", key="refresh_data", help="Click to reload the latest data from files"):
+                # Clear the cache to force data reload
+                st.cache_data.clear()
+                st.rerun()
+    
     def render_footer(self):
         """Render the footer"""
         st.markdown("""
@@ -309,6 +378,9 @@ class ClayDashboard:
                 <span title="AEC = Architecture, Engineering & Construction. This platform provides strategic business intelligence, competitive analysis, and market insights for companies in the built environment industry." style="cursor: help; color: var(--accent-color); font-size: 0.8em; margin-left: 10px;">ⓘ</span>
             </h1>
             ''', unsafe_allow_html=True)
+            
+            # Create navbar with tabs and refresh icon
+            self.render_navbar_with_refresh()
             
             # Use enhanced tabs for navigation
             tab1, tab2, tab3, tab4 = st.tabs([

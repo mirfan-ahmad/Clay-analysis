@@ -259,6 +259,44 @@ class ChartCreator:
         
         return fig
     
+    def create_treemap_chart(self, data: pd.Series, title: str, height: int = 600) -> go.Figure:
+        """Create a treemap chart with professional styling - perfect for showing many companies"""
+        # Prepare data for treemap
+        df_treemap = pd.DataFrame({
+            'company': data.index,
+            'count': data.values
+        })
+        
+        # Create treemap
+        fig = go.Figure(data=[
+            go.Treemap(
+                labels=df_treemap['company'],
+                parents=[''] * len(df_treemap),  # All companies are at root level
+                values=df_treemap['count'],
+                textinfo="label+value",
+                hovertemplate='<b>%{label}</b><br>Decision Makers: %{value}<extra></extra>',
+                marker=dict(
+                    colors=df_treemap['count'],
+                    colorscale='Blues',
+                    showscale=True,
+                    colorbar=dict(title="Decision Makers")
+                ),
+                textfont=dict(size=10)
+            )
+        ])
+        
+        fig.update_layout(
+            title=title,
+            height=height,
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(family="Arial, sans-serif", size=12, color='#2c3e50'),
+            title_font=dict(size=16, color='#1f4e79'),
+            margin=dict(l=50, r=50, t=80, b=50)
+        )
+        
+        return fig
+    
     def create_scatter_plot(self, x_data: pd.Series, y_data: pd.Series, title: str, 
                            x_label: str = "", y_label: str = "", height: int = 400) -> go.Figure:
         """Create a scatter plot with professional styling"""
