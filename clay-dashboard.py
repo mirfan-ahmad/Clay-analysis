@@ -24,6 +24,7 @@ class ClayDashboard:
         
     def setup_page_config(self):
         """Configure Streamlit page settings"""
+        # Force light mode
         st.set_page_config(
             page_title="AEC Market Intelligence Platform",
             page_icon="🏗️",
@@ -33,11 +34,62 @@ class ClayDashboard:
                 'About': "# AEC Market Intelligence Platform\nStrategic business intelligence for Architecture, Engineering, and Construction markets."
             }
         )
+        
+        # Additional CSS to force light mode
+        st.markdown("""
+        <style>
+            /* Force light mode globally */
+            .stApp {
+                background-color: #ffffff !important;
+            }
+            
+            /* Override Streamlit's dark mode detection */
+            [data-testid="stAppViewContainer"] {
+                background-color: #ffffff !important;
+            }
+            
+            /* Force light mode for all Streamlit components */
+            .stMarkdown, .stText, .stDataFrame, .stMetric, .stSelectbox, .stButton {
+                background-color: transparent !important;
+                color: #2c3e50 !important;
+            }
+            
+            /* Override any system dark mode preferences */
+            @media (prefers-color-scheme: dark) {
+                .stApp, [data-testid="stAppViewContainer"] {
+                    background-color: #ffffff !important;
+                }
+            }
+        </style>
+        """, unsafe_allow_html=True)
     
     def setup_styling(self):
         """Setup professional CSS styling for stakeholders"""
         st.markdown("""
         <style>
+            /* Force light mode - override system dark mode */
+            [data-testid="stAppViewContainer"] {
+                background-color: #ffffff !important;
+            }
+            
+            [data-testid="stSidebar"] {
+                background-color: #f8f9fa !important;
+            }
+            
+            .stApp {
+                background-color: #ffffff !important;
+            }
+            
+            /* Override any dark mode styles */
+            .dark .stApp {
+                background-color: #ffffff !important;
+            }
+            
+            /* Force light text on light background */
+            .stMarkdown, .stText, .stDataFrame {
+                color: #2c3e50 !important;
+            }
+            
             /* Professional color scheme for light theme */
             :root {
                 --primary-color: #1f4e79;
