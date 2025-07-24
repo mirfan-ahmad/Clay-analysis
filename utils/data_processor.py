@@ -38,9 +38,13 @@ class DataProcessor:
         # Extract country
         df['Country'] = df['Country'].fillna('Unknown')
         
+        # Clean URLs
+        df['LinkedIn URL'] = df['LinkedIn URL'].fillna('')
+        df['Domain'] = df['Domain'].fillna('')
+        
         # Add derived fields
-        df['Has_LinkedIn'] = df['LinkedIn URL'].notna()
-        df['Has_Domain'] = df['Domain'].notna()
+        df['Has_LinkedIn'] = df['LinkedIn URL'].notna() & (df['LinkedIn URL'] != '')
+        df['Has_Domain'] = df['Domain'].notna() & (df['Domain'] != '')
         
         return df
     
@@ -60,6 +64,9 @@ class DataProcessor:
         # Extract company
         df['Company'] = df['Company Table Data'].fillna('Unknown')
         
+        # Clean LinkedIn URL
+        df['LinkedIn URL'] = df['LinkedIn Profile'].fillna('')
+        
         # Add seniority level
         df['Seniority'] = df['Job Title'].apply(self._get_seniority_level)
         
@@ -76,6 +83,9 @@ class DataProcessor:
         df['Job Title'] = df['Job Title'].fillna('Unknown')
         df['Location'] = df['Location'].fillna('Unknown')
         df['Company Name'] = df['Company Name'].fillna('Unknown')
+        
+        # Clean job URL
+        df['Job URL'] = df['Job LinkedIn Url'].fillna('')
         
         # Convert post date to datetime and ensure timezone-naive
         df['Post On'] = pd.to_datetime(df['Post On'], errors='coerce')

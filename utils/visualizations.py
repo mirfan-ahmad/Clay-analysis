@@ -6,23 +6,24 @@ from typing import Dict, List, Optional, Callable
 import streamlit as st
 
 class ChartCreator:
-    """Handles creation of all visualizations for the dashboard"""
+    """Handles all chart creation and styling"""
     
     def __init__(self):
-        # Define consistent color schemes
-        self.colors = {
-            'primary': '#1f77b4',
-            'secondary': '#ff7f0e',
-            'success': '#2ca02c',
-            'warning': '#d62728',
-            'info': '#9467bd',
-            'light': '#8c564b',
-            'dark': '#e377c2'
-        }
-        
+        """Initialize with professional color palette"""
+        # Professional color palette for business dashboards
         self.color_palette = [
-            '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
-            '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'
+            '#1f4e79',  # Dark blue (primary)
+            '#2c5aa0',  # Medium blue
+            '#4a90e2',  # Light blue
+            '#28a745',  # Green
+            '#ffc107',  # Yellow
+            '#dc3545',  # Red
+            '#6c757d',  # Gray
+            '#17a2b8',  # Cyan
+            '#fd7e14',  # Orange
+            '#6f42c1',  # Purple
+            '#e83e8c',  # Pink
+            '#20c997'   # Teal
         ]
     
     def create_metric_card(self, title: str, value: str, delta: Optional[str] = None, 
@@ -48,181 +49,289 @@ class ChartCreator:
         
         return fig
     
-    def create_horizontal_bar(self, data: pd.Series, title: str, 
-                            x_label: str = "Count", y_label: str = "Category",
-                            color: str = None, height: int = 400, 
-                            clickmode: str = "event+select") -> go.Figure:
-        """Create an interactive horizontal bar chart"""
-        fig = px.bar(
-            x=data.values,
-            y=data.index,
-            orientation='h',
-            title=title,
-            labels={'x': x_label, 'y': y_label},
-            color_discrete_sequence=[color] if color else self.color_palette
-        )
+    def create_horizontal_bar(self, data: pd.Series, title: str, x_label: str = "", 
+                            y_label: str = "", height: int = 400) -> go.Figure:
+        """Create a horizontal bar chart with professional styling"""
+        fig = go.Figure(data=[
+            go.Bar(
+                y=data.index,
+                x=data.values,
+                orientation='h',
+                marker_color=self.color_palette[0],
+                marker_line_color='#ffffff',
+                marker_line_width=1,
+                text=data.values,
+                textposition='auto',
+                hovertemplate='<b>%{y}</b><br>Count: %{x}<extra></extra>'
+            )
+        ])
         
         fig.update_layout(
+            title=title,
+            xaxis_title=x_label,
+            yaxis_title=y_label,
             height=height,
-            showlegend=False,
-            margin=dict(l=20, r=20, t=40, b=20),
-            title_x=0.5,
-            clickmode=clickmode,
-            dragmode='select'
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(family="Arial, sans-serif", size=12, color='#2c3e50'),
+            title_font=dict(size=16, color='#1f4e79'),
+            margin=dict(l=50, r=50, t=80, b=50),
+            showlegend=False
         )
         
-        # Add interactive features
-        fig.update_traces(
-            hovertemplate="<b>%{y}</b><br>Count: %{x}<extra></extra>",
-            hoverinfo='x+y'
+        fig.update_xaxes(
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='#e9ecef',
+            zeroline=False,
+            showline=True,
+            linecolor='#dee2e6',
+            linewidth=1
+        )
+        
+        fig.update_yaxes(
+            showgrid=False,
+            zeroline=False,
+            showline=True,
+            linecolor='#dee2e6',
+            linewidth=1
         )
         
         return fig
     
-    def create_pie_chart(self, data: pd.Series, title: str, 
-                        height: int = 400, clickmode: str = "event+select") -> go.Figure:
-        """Create an interactive pie chart"""
-        fig = px.pie(
-            values=data.values,
-            names=data.index,
-            title=title,
-            color_discrete_sequence=self.color_palette
-        )
+    def create_pie_chart(self, data: pd.Series, title: str, height: int = 400) -> go.Figure:
+        """Create a pie chart with professional styling"""
+        fig = go.Figure(data=[
+            go.Pie(
+                labels=data.index,
+                values=data.values,
+                marker_colors=self.color_palette[:len(data)],
+                textinfo='label+percent',
+                textposition='outside',
+                hovertemplate='<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}<extra></extra>'
+            )
+        ])
         
         fig.update_layout(
+            title=title,
             height=height,
-            margin=dict(l=20, r=20, t=40, b=20),
-            title_x=0.5,
-            clickmode=clickmode
-        )
-        
-        # Add interactive features
-        fig.update_traces(
-            hovertemplate="<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent}<extra></extra>",
-            hoverinfo='label+value+percent'
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(family="Arial, sans-serif", size=12, color='#2c3e50'),
+            title_font=dict(size=16, color='#1f4e79'),
+            margin=dict(l=50, r=50, t=80, b=50),
+            showlegend=True,
+            legend=dict(
+                orientation="v",
+                yanchor="top",
+                y=1,
+                xanchor="left",
+                x=1.02,
+                bgcolor='rgba(255,255,255,0.8)',
+                bordercolor='#dee2e6',
+                borderwidth=1
+            )
         )
         
         return fig
     
-    def create_vertical_bar(self, data: pd.Series, title: str,
-                          x_label: str = "Category", y_label: str = "Count",
-                          color: str = None, height: int = 400, 
-                          clickmode: str = "event+select") -> go.Figure:
-        """Create an interactive vertical bar chart"""
-        fig = px.bar(
-            x=data.index,
-            y=data.values,
-            title=title,
-            labels={'x': x_label, 'y': y_label},
-            color_discrete_sequence=[color] if color else self.color_palette
-        )
+    def create_vertical_bar(self, data: pd.Series, title: str, x_label: str = "", 
+                          y_label: str = "", height: int = 400) -> go.Figure:
+        """Create a vertical bar chart with professional styling"""
+        fig = go.Figure(data=[
+            go.Bar(
+                x=data.index,
+                y=data.values,
+                marker_color=self.color_palette[1],
+                marker_line_color='#ffffff',
+                marker_line_width=1,
+                text=data.values,
+                textposition='auto',
+                hovertemplate='<b>%{x}</b><br>Count: %{y}<extra></extra>'
+            )
+        ])
         
         fig.update_layout(
+            title=title,
+            xaxis_title=x_label,
+            yaxis_title=y_label,
             height=height,
-            showlegend=False,
-            margin=dict(l=20, r=20, t=40, b=20),
-            title_x=0.5,
-            clickmode=clickmode,
-            dragmode='select'
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(family="Arial, sans-serif", size=12, color='#2c3e50'),
+            title_font=dict(size=16, color='#1f4e79'),
+            margin=dict(l=50, r=50, t=80, b=50),
+            showlegend=False
         )
         
-        # Add interactive features
-        fig.update_traces(
-            hovertemplate="<b>%{x}</b><br>Count: %{y}<extra></extra>",
-            hoverinfo='x+y'
+        fig.update_xaxes(
+            showgrid=False,
+            zeroline=False,
+            showline=True,
+            linecolor='#dee2e6',
+            linewidth=1
+        )
+        
+        fig.update_yaxes(
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='#e9ecef',
+            zeroline=False,
+            showline=True,
+            linecolor='#dee2e6',
+            linewidth=1
         )
         
         return fig
     
-    def create_line_chart(self, data: pd.Series, title: str,
-                         x_label: str = "Date", y_label: str = "Count",
-                         height: int = 400, clickmode: str = "event+select") -> go.Figure:
-        """Create an interactive line chart"""
-        fig = px.line(
-            x=data.index,
-            y=data.values,
-            title=title,
-            labels={'x': x_label, 'y': y_label},
-            color_discrete_sequence=[self.colors['primary']]
-        )
+    def create_line_chart(self, data: pd.Series, title: str, x_label: str = "", 
+                         y_label: str = "", height: int = 400) -> go.Figure:
+        """Create a line chart with professional styling"""
+        fig = go.Figure(data=[
+            go.Scatter(
+                x=data.index,
+                y=data.values,
+                mode='lines+markers',
+                line=dict(color=self.color_palette[2], width=3),
+                marker=dict(color=self.color_palette[2], size=6),
+                fill='tonexty',
+                fillcolor='rgba(74, 144, 226, 0.1)',
+                hovertemplate='<b>%{x}</b><br>Value: %{y}<extra></extra>'
+            )
+        ])
         
         fig.update_layout(
+            title=title,
+            xaxis_title=x_label,
+            yaxis_title=y_label,
             height=height,
-            showlegend=False,
-            margin=dict(l=20, r=20, t=40, b=20),
-            title_x=0.5,
-            clickmode=clickmode,
-            dragmode='select'
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(family="Arial, sans-serif", size=12, color='#2c3e50'),
+            title_font=dict(size=16, color='#1f4e79'),
+            margin=dict(l=50, r=50, t=80, b=50),
+            showlegend=False
         )
         
-        # Add interactive features
-        fig.update_traces(
-            hovertemplate="<b>%{x}</b><br>Count: %{y}<extra></extra>",
-            hoverinfo='x+y'
+        fig.update_xaxes(
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='#e9ecef',
+            zeroline=False,
+            showline=True,
+            linecolor='#dee2e6',
+            linewidth=1
+        )
+        
+        fig.update_yaxes(
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='#e9ecef',
+            zeroline=False,
+            showline=True,
+            linecolor='#dee2e6',
+            linewidth=1
         )
         
         return fig
     
-    def create_sunburst_chart(self, df: pd.DataFrame, path: List[str], 
-                            values: str, title: str, height: int = 500,
-                            clickmode: str = "event+select") -> go.Figure:
-        """Create an interactive sunburst chart for hierarchical data"""
-        fig = px.sunburst(
-            df,
-            path=path,
-            values=values,
-            title=title,
-            color_discrete_sequence=self.color_palette
-        )
+    def create_sunburst_chart(self, data: pd.DataFrame, title: str, height: int = 500) -> go.Figure:
+        """Create a sunburst chart with professional styling"""
+        fig = go.Figure(data=[
+            go.Sunburst(
+                ids=data['ids'],
+                labels=data['labels'],
+                parents=data['parents'],
+                values=data['values'],
+                hovertemplate='<b>%{label}</b><br>Value: %{value}<extra></extra>'
+            )
+        ])
         
         fig.update_layout(
+            title=title,
             height=height,
-            margin=dict(l=20, r=20, t=40, b=20),
-            title_x=0.5,
-            clickmode=clickmode
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(family="Arial, sans-serif", size=12, color='#2c3e50'),
+            title_font=dict(size=16, color='#1f4e79'),
+            margin=dict(l=50, r=50, t=80, b=50)
         )
         
         return fig
     
-    def create_scatter_plot(self, df: pd.DataFrame, x: str, y: str, 
-                          color: str = None, size: str = None,
-                          title: str = "", height: int = 400,
-                          clickmode: str = "event+select") -> go.Figure:
-        """Create an interactive scatter plot"""
-        fig = px.scatter(
-            df,
-            x=x,
-            y=y,
-            color=color,
-            size=size,
-            title=title,
-            color_discrete_sequence=self.color_palette
-        )
+    def create_scatter_plot(self, x_data: pd.Series, y_data: pd.Series, title: str, 
+                           x_label: str = "", y_label: str = "", height: int = 400) -> go.Figure:
+        """Create a scatter plot with professional styling"""
+        fig = go.Figure(data=[
+            go.Scatter(
+                x=x_data,
+                y=y_data,
+                mode='markers',
+                marker=dict(
+                    color=self.color_palette[3],
+                    size=8,
+                    opacity=0.7,
+                    line=dict(color='#ffffff', width=1)
+                ),
+                hovertemplate='<b>X: %{x}</b><br>Y: %{y}<extra></extra>'
+            )
+        ])
         
         fig.update_layout(
+            title=title,
+            xaxis_title=x_label,
+            yaxis_title=y_label,
             height=height,
-            margin=dict(l=20, r=20, t=40, b=20),
-            title_x=0.5,
-            clickmode=clickmode,
-            dragmode='select'
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(family="Arial, sans-serif", size=12, color='#2c3e50'),
+            title_font=dict(size=16, color='#1f4e79'),
+            margin=dict(l=50, r=50, t=80, b=50),
+            showlegend=False
+        )
+        
+        fig.update_xaxes(
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='#e9ecef',
+            zeroline=False,
+            showline=True,
+            linecolor='#dee2e6',
+            linewidth=1
+        )
+        
+        fig.update_yaxes(
+            showgrid=True,
+            gridwidth=1,
+            gridcolor='#e9ecef',
+            zeroline=False,
+            showline=True,
+            linecolor='#dee2e6',
+            linewidth=1
         )
         
         return fig
     
-    def create_heatmap(self, data: pd.DataFrame, title: str,
-                      height: int = 400, clickmode: str = "event+select") -> go.Figure:
-        """Create an interactive heatmap"""
-        fig = px.imshow(
-            data,
-            title=title,
-            color_continuous_scale='Viridis'
-        )
+    def create_heatmap(self, data: pd.DataFrame, title: str, height: int = 400) -> go.Figure:
+        """Create a heatmap with professional styling"""
+        fig = go.Figure(data=[
+            go.Heatmap(
+                z=data.values,
+                x=data.columns,
+                y=data.index,
+                colorscale='Blues',
+                hovertemplate='<b>%{y}</b><br><b>%{x}</b><br>Value: %{z}<extra></extra>'
+            )
+        ])
         
         fig.update_layout(
+            title=title,
             height=height,
-            margin=dict(l=20, r=20, t=40, b=20),
-            title_x=0.5,
-            clickmode=clickmode
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(family="Arial, sans-serif", size=12, color='#2c3e50'),
+            title_font=dict(size=16, color='#1f4e79'),
+            margin=dict(l=50, r=50, t=80, b=50)
         )
         
         return fig
@@ -262,26 +371,14 @@ class ChartCreator:
             metric_cards.append(card)
         return metric_cards
     
-    def style_chart(self, fig: go.Figure, template: str = "plotly_white") -> go.Figure:
-        """Apply consistent styling to a chart"""
+    def style_chart(self, fig: go.Figure) -> go.Figure:
+        """Apply consistent professional styling to any chart"""
         fig.update_layout(
-            template=template,
-            font=dict(family="Arial", size=12),
-            title_font=dict(size=16, color=self.colors['primary']),
-            xaxis=dict(
-                showgrid=True,
-                gridwidth=1,
-                gridcolor='lightgray',
-                zeroline=False
-            ),
-            yaxis=dict(
-                showgrid=True,
-                gridwidth=1,
-                gridcolor='lightgray',
-                zeroline=False
-            ),
-            plot_bgcolor='white',
-            paper_bgcolor='white'
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(family="Arial, sans-serif", size=12, color='#2c3e50'),
+            title_font=dict(size=16, color='#1f4e79'),
+            margin=dict(l=50, r=50, t=80, b=50)
         )
         
         return fig
