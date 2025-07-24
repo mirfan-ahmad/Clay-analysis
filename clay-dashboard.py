@@ -25,12 +25,12 @@ class ClayDashboard:
     def setup_page_config(self):
         """Configure Streamlit page settings"""
         st.set_page_config(
-            page_title="Clay Analytics Dashboard",
-            page_icon="📊",
+            page_title="AEC Market Intelligence Platform",
+            page_icon="🏗️",
             layout="wide",
             initial_sidebar_state="collapsed",
             menu_items={
-                'About': "# Clay Analytics Dashboard\nA comprehensive analytics dashboard for Clay data analysis."
+                'About': "# AEC Market Intelligence Platform\nStrategic business intelligence for Architecture, Engineering, and Construction markets."
             }
         )
     
@@ -238,8 +238,8 @@ class ClayDashboard:
         """Render the footer"""
         st.markdown("""
         <div class="footer">
-            <p><strong>📊 Clay Analytics Dashboard</strong></p>
-            <p>Professional Business Intelligence Platform</p>
+            <p><strong>🏗️ AEC Market Intelligence Platform</strong></p>
+            <p>Strategic Business Intelligence for Architecture, Engineering & Construction</p>
             <p>Last updated: {}</p>
         </div>
         """.format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")), unsafe_allow_html=True)
@@ -250,8 +250,13 @@ class ClayDashboard:
             # Load and process data
             companies_df, decision_makers_df, jobs_df = self.load_and_process_data()
             
-            # Main header
-            st.markdown('<h1 class="main-header">Clay Analytics Dashboard</h1>', unsafe_allow_html=True)
+            # Main header with tooltip
+            st.markdown('''
+            <h1 class="main-header">
+                AEC Market Intelligence Platform
+                <span title="AEC = Architecture, Engineering & Construction. This platform provides strategic business intelligence, competitive analysis, and market insights for companies in the built environment industry." style="cursor: help; color: var(--accent-color); font-size: 0.8em; margin-left: 10px;">ⓘ</span>
+            </h1>
+            ''', unsafe_allow_html=True)
             
             # Use enhanced tabs for navigation
             tab1, tab2, tab3, tab4 = st.tabs([

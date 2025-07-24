@@ -47,6 +47,27 @@ class DashboardPages:
             )
             st.plotly_chart(fig_leadership, use_container_width=True, key="overview_leadership")
         
+        # Market penetration analysis
+        st.markdown('<h3 class="section-header">🎯 Market Penetration Analysis</h3>', unsafe_allow_html=True)
+        st.markdown("*This chart shows which companies have both strong leadership presence and active hiring, indicating organizations that are growing and have multiple decision makers we can engage with.*")
+        
+        # Companies with both decision makers and jobs
+        companies_with_dm = set(decision_makers_df['Company'].unique())
+        companies_with_jobs = set(jobs_df['Company Name'].unique())
+        companies_with_both = companies_with_dm.intersection(companies_with_jobs)
+        
+        penetration_data = pd.Series({
+            'Companies with Decision Makers Only': len(companies_with_dm - companies_with_jobs),
+            'Companies with Jobs Only': len(companies_with_jobs - companies_with_dm),
+            'Companies with Both': len(companies_with_both),
+            'Companies with Neither': len(set(companies_df['Name'].unique()) - companies_with_dm - companies_with_jobs)
+        })
+        
+        fig_penetration = self.chart_creator.create_pie_chart(
+            penetration_data, "Market Penetration Analysis"
+        )
+        st.plotly_chart(fig_penetration, use_container_width=True, key="overview_penetration")
+        
         # Geographic market presence
         st.markdown('<h3 class="section-header">🌍 Geographic Market Presence</h3>', unsafe_allow_html=True)
         st.markdown("*This chart shows where our target companies are located globally, helping identify which markets are most active and where we should focus our expansion efforts.*")
@@ -102,6 +123,22 @@ class DashboardPages:
             fig_size = self.chart_creator.create_pie_chart(size_counts, "Company Size Distribution")
             st.plotly_chart(fig_size, use_container_width=True, key="companies_size")
         
+        # # Competitive intelligence - companies with digital presence
+        # st.markdown('<h3 class="section-header">💻 Digital Presence Analysis</h3>', unsafe_allow_html=True)
+        # st.markdown("*This chart shows which companies have strong digital footprints with both LinkedIn profiles and websites, indicating organizations that are more likely to be receptive to digital outreach and modern business practices.*")
+        
+        # digital_presence = pd.Series({
+        #     'LinkedIn + Website': len(companies_df[(companies_df['Has_LinkedIn']) & (companies_df['Has_Domain'])]),
+        #     'LinkedIn Only': len(companies_df[(companies_df['Has_LinkedIn']) & (~companies_df['Has_Domain'])]),
+        #     'Website Only': len(companies_df[(~companies_df['Has_LinkedIn']) & (companies_df['Has_Domain'])]),
+        #     'No Digital Presence': len(companies_df[(~companies_df['Has_LinkedIn']) & (~companies_df['Has_Domain'])])
+        # })
+        
+        # fig_digital = self.chart_creator.create_pie_chart(
+        #     digital_presence, "Digital Presence Analysis"
+        # )
+        # st.plotly_chart(fig_digital, use_container_width=True, key="companies_digital")
+        
         # Geographic expansion opportunities
         st.markdown('<h3 class="section-header">🌍 Geographic Expansion Opportunities</h3>', unsafe_allow_html=True)
         st.markdown("*This chart shows where companies are located around the world, helping us identify which markets are most active and where we should focus our business development efforts.*")
@@ -155,6 +192,17 @@ class DashboardPages:
                 title_counts, "Key Decision Maker Roles", "Number of People", "Job Title"
             )
             st.plotly_chart(fig_titles, use_container_width=True, key="dm_titles")
+        
+        # Decision maker influence mapping
+        st.markdown('<h3 class="section-header">🎯 Decision Maker Influence Mapping</h3>', unsafe_allow_html=True)
+        st.markdown("*This chart shows which companies have the highest concentration of decision makers, helping us identify organizations where we have multiple potential entry points and stronger relationship opportunities.*")
+        
+        # Calculate decision maker density per company
+        dm_density = decision_makers_df['Company'].value_counts().head(10)
+        fig_influence = self.chart_creator.create_horizontal_bar(
+            dm_density, "Decision Maker Influence by Company", "Number of Decision Makers", "Company"
+        )
+        st.plotly_chart(fig_influence, use_container_width=True, key="dm_influence")
         
         # Geographic leadership distribution
         st.markdown('<h3 class="section-header">🌍 Geographic Leadership Distribution</h3>', unsafe_allow_html=True)
@@ -211,6 +259,19 @@ class DashboardPages:
                 company_job_counts, "Company Hiring Activity"
             )
             st.plotly_chart(fig_hiring, use_container_width=True, key="jobs_hiring")
+        
+        # Business opportunity scoring
+        st.markdown('<h3 class="section-header">🎯 Business Opportunity Scoring</h3>', unsafe_allow_html=True)
+        st.markdown("*This chart identifies companies that are actively hiring and likely growing, helping us prioritize which organizations to approach first based on their current business activity and expansion needs.*")
+        
+        # Calculate opportunity score (companies with multiple job postings)
+        opportunity_scores = jobs_df['Company Name'].value_counts()
+        high_opportunity = opportunity_scores[opportunity_scores > 1].head(8)
+        
+        fig_opportunity = self.chart_creator.create_horizontal_bar(
+            high_opportunity, "High-Growth Companies (Multiple Job Postings)", "Number of Job Postings", "Company"
+        )
+        st.plotly_chart(fig_opportunity, use_container_width=True, key="jobs_opportunity")
         
         # Geographic job market
         st.markdown('<h3 class="section-header">🌍 Geographic Job Market</h3>', unsafe_allow_html=True)
