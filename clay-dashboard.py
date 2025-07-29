@@ -26,12 +26,12 @@ class ClayDashboard:
         """Configure Streamlit page settings"""
         # Force light mode
         st.set_page_config(
-            page_title="AEC Market Intelligence Platform",
+            page_title="Upstart13 - Dashboard",
             page_icon="🏗️",
             layout="wide",
             initial_sidebar_state="collapsed",
             menu_items={
-                'About': "# AEC Market Intelligence Platform\nStrategic business intelligence for Architecture, Engineering, and Construction markets."
+                'About': "# Upstart13 Dashboard."
             }
         )
         
@@ -359,7 +359,7 @@ class ClayDashboard:
         """Render the footer"""
         st.markdown("""
         <div class="footer">
-            <p><strong>🏗️ AEC Market Intelligence Platform</strong></p>
+            <p><strong>🏗️ Upstart13 Dashboard</strong></p>
             <p>Strategic Business Intelligence for Architecture, Engineering & Construction</p>
             <p>Last updated: {}</p>
         </div>
@@ -374,7 +374,7 @@ class ClayDashboard:
             # Main header with tooltip
             st.markdown('''
             <h1 class="main-header">
-                AEC Market Intelligence Platform
+                Upstart13 Dashboard
                 <span title="AEC = Architecture, Engineering & Construction. This platform provides strategic business intelligence, competitive analysis, and market insights for companies in the built environment industry." style="cursor: help; color: var(--accent-color); font-size: 0.8em; margin-left: 10px;">ⓘ</span>
             </h1>
             ''', unsafe_allow_html=True)
